@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Huyền Tâm
 
-## Getting Started
+Nền tảng phong thủy, tử vi, lịch âm dương, Kinh Dịch và bói toán dân gian Việt Nam.
 
-First, run the development server:
+## Công nghệ
+
+- Next.js App Router (TypeScript)
+- Tailwind CSS + Framer Motion + Lucide
+- Prisma + PostgreSQL (tùy chọn)
+- Auth.js (Credentials, chế độ demo khi chưa có DB)
+- React Hook Form + Zod (sẵn sàng mở rộng form)
+
+## Chạy local
 
 ```bash
+npm install
+cp .env.example .env
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Database (tùy chọn)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Khi có PostgreSQL:
 
-## Learn More
+```bash
+# trong .env
+DATABASE_URL="postgresql://..."
+AUTH_SECRET="chuoi-bi-mat-dai"
+npx prisma db push
+```
 
-To learn more about Next.js, take a look at the following resources:
+Không có `DATABASE_URL` thì site vẫn chạy: thuật toán/dữ liệu JSON hoạt động bình thường; đăng nhập dùng session demo; hồ sơ lưu localStorage.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Kiến trúc chính
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+  app/                 # routes website, auth, admin, api
+  components/          # ui, layout, calendar, divination, admin
+  data/                # 64 quẻ, con giáp, blog, xin xăm, tools
+  lib/algorithms/      # lịch âm, can chi, ngày tốt, tử vi, Kinh Dịch, ngũ hành, thần số
+  lib/seo/             # metadata helpers
+```
 
-## Deploy on Vercel
+## Nguyên tắc dữ liệu
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Lịch âm/dương, can chi, nạp âm: **thuật toán** xác định.
+- Hoàng đạo, trực, tam nương, xin xăm, bói dân gian: ghi rõ **quan niệm dân gian**.
+- Gieo quẻ ngẫu nhiên dùng **RNG có seed** (kiểm thử / tái hiện được).
+- Không trình bày dữ liệu giả như đã hoàn thiện tuyệt đối; phần thiếu được đánh dấu cần bổ sung.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
+
+| Lệnh | Mục đích |
+|------|----------|
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript |
+| `npm run db:push` | Prisma db push |
+
+## Admin
+
+Truy cập `/admin` để xem CMS (bài viết, 64 quẻ, xin xăm, SEO, cấu hình). Hiện chưa khóa role — nên bảo vệ bằng auth/role trước khi production.

@@ -1,0 +1,225 @@
+import type { Can, Chi, NguHanh } from "@/types";
+
+export const CAN_LIST: Can[] = [
+  "Giap",
+  "At",
+  "Binh",
+  "Dinh",
+  "Mau",
+  "Ky",
+  "Canh",
+  "Tan",
+  "Nham",
+  "Quy",
+];
+
+export const CHI_LIST: Chi[] = [
+  "Ty",
+  "Suu",
+  "Dan",
+  "Mao",
+  "Thin",
+  "Ti",
+  "Ngo",
+  "Mui",
+  "Than",
+  "Dau",
+  "Tuat",
+  "Hoi",
+];
+
+export const CAN_VI: Record<Can, string> = {
+  Giap: "Giáp",
+  At: "Ất",
+  Binh: "Bính",
+  Dinh: "Đinh",
+  Mau: "Mậu",
+  Ky: "Kỷ",
+  Canh: "Canh",
+  Tan: "Tân",
+  Nham: "Nhâm",
+  Quy: "Quý",
+};
+
+export const CHI_VI: Record<Chi, string> = {
+  Ty: "Tý",
+  Suu: "Sửu",
+  Dan: "Dần",
+  Mao: "Mão",
+  Thin: "Thìn",
+  Ti: "Tỵ",
+  Ngo: "Ngọ",
+  Mui: "Mùi",
+  Than: "Thân",
+  Dau: "Dậu",
+  Tuat: "Tuất",
+  Hoi: "Hợi",
+};
+
+export const CHI_ANIMAL: Record<Chi, string> = {
+  Ty: "Chuột",
+  Suu: "Trâu",
+  Dan: "Hổ",
+  Mao: "Mèo",
+  Thin: "Rồng",
+  Ti: "Rắn",
+  Ngo: "Ngựa",
+  Mui: "Dê",
+  Than: "Khỉ",
+  Dau: "Gà",
+  Tuat: "Chó",
+  Hoi: "Lợn",
+};
+
+export const CAN_ELEMENT: Record<Can, NguHanh> = {
+  Giap: "Moc",
+  At: "Moc",
+  Binh: "Hoa",
+  Dinh: "Hoa",
+  Mau: "Tho",
+  Ky: "Tho",
+  Canh: "Kim",
+  Tan: "Kim",
+  Nham: "Thuy",
+  Quy: "Thuy",
+};
+
+export const NGU_HANH_VI: Record<NguHanh, string> = {
+  Kim: "Kim",
+  Moc: "Mộc",
+  Thuy: "Thủy",
+  Hoa: "Hỏa",
+  Tho: "Thổ",
+};
+
+/** 60 nap am pairs (Can+Chi nạp âm) — classical reference labels */
+export const NAP_AM_60: string[] = [
+  "Hải Trung Kim",
+  "Hải Trung Kim",
+  "Lư Trung Hỏa",
+  "Lư Trung Hỏa",
+  "Đại Lâm Mộc",
+  "Đại Lâm Mộc",
+  "Lộ Bàng Thổ",
+  "Lộ Bàng Thổ",
+  "Kiếm Phong Kim",
+  "Kiếm Phong Kim",
+  "Sơn Đầu Hỏa",
+  "Sơn Đầu Hỏa",
+  "Giản Hạ Thủy",
+  "Giản Hạ Thủy",
+  "Thành Đầu Thổ",
+  "Thành Đầu Thổ",
+  "Bạch Lạp Kim",
+  "Bạch Lạp Kim",
+  "Dương Liễu Mộc",
+  "Dương Liễu Mộc",
+  "Tuyền Trung Thủy",
+  "Tuyền Trung Thủy",
+  "Ốc Thượng Thổ",
+  "Ốc Thượng Thổ",
+  "Tích Lịch Hỏa",
+  "Tích Lịch Hỏa",
+  "Tùng Bách Mộc",
+  "Tùng Bách Mộc",
+  "Trường Lưu Thủy",
+  "Trường Lưu Thủy",
+  "Sa Trung Kim",
+  "Sa Trung Kim",
+  "Sơn Hạ Hỏa",
+  "Sơn Hạ Hỏa",
+  "Bình Địa Mộc",
+  "Bình Địa Mộc",
+  "Bích Thượng Thổ",
+  "Bích Thượng Thổ",
+  "Kim Bạch Kim",
+  "Kim Bạch Kim",
+  "Phú Đăng Hỏa",
+  "Phú Đăng Hỏa",
+  "Thiên Hà Thủy",
+  "Thiên Hà Thủy",
+  "Đại Trạch Thổ",
+  "Đại Trạch Thổ",
+  "Thoa Xuyến Kim",
+  "Thoa Xuyến Kim",
+  "Tang Đố Mộc",
+  "Tang Đố Mộc",
+  "Đại Khê Thủy",
+  "Đại Khê Thủy",
+  "Sa Trung Thổ",
+  "Sa Trung Thổ",
+  "Thiên Thượng Hỏa",
+  "Thiên Thượng Hỏa",
+  "Thạch Lựu Mộc",
+  "Thạch Lựu Mộc",
+  "Đại Hải Thủy",
+  "Đại Hải Thủy",
+];
+
+export const TRUC_12 = [
+  "Kiến",
+  "Trừ",
+  "Mãn",
+  "Bình",
+  "Định",
+  "Chấp",
+  "Phá",
+  "Nguy",
+  "Thành",
+  "Thu",
+  "Khai",
+  "Bế",
+] as const;
+
+export const TIET_KHI = [
+  "Tiểu hàn",
+  "Đại hàn",
+  "Lập xuân",
+  "Vũ thủy",
+  "Kinh trập",
+  "Xuân phân",
+  "Thanh minh",
+  "Cốc vũ",
+  "Lập hạ",
+  "Tiểu mãn",
+  "Mang chủng",
+  "Hạ chí",
+  "Tiểu thử",
+  "Đại thử",
+  "Lập thu",
+  "Xử thử",
+  "Bạch lộ",
+  "Thu phân",
+  "Hàn lộ",
+  "Sương giáng",
+  "Lập đông",
+  "Tiểu tuyết",
+  "Đại tuyết",
+  "Đông chí",
+] as const;
+
+/** Hoàng đạo / Hắc đạo by day chi relative to month chi — folk calendar convention */
+export const HOANG_DAO_CHI: Chi[] = ["Ty", "Suu", "Mao", "Ngo", "Dau", "Hoi"];
+
+export const GIO_CHI_LABELS = [
+  "Tý (23-1)",
+  "Sửu (1-3)",
+  "Dần (3-5)",
+  "Mão (5-7)",
+  "Thìn (7-9)",
+  "Tỵ (9-11)",
+  "Ngọ (11-13)",
+  "Mùi (13-15)",
+  "Thân (15-17)",
+  "Dậu (17-19)",
+  "Tuất (19-21)",
+  "Hợi (21-23)",
+] as const;
+
+/** Tam nương lunar days — folk belief */
+export const TAM_NUONG_DAYS = [3, 7, 13, 18, 22, 27];
+
+/** Nguyệt kỵ lunar days — folk belief */
+export const NGUYET_KY_DAYS = [5, 14, 23];
+
+export const JD_EPOCH = 2415021; // 1900-01-01 approx reference used in VN calendar libs

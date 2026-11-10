@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  EDITOR
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  image         String?
+  role          Role      @default(USER)
+  birthDay      Int?
+  birthMonth    Int?
+  birthYear     Int?
+  birthHour     Int?
+  gender        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  histories     QueryHistory[]
+  favorites     Favorite[]
+  posts         Post[]    @relation("PostAuthor")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  posts       Post[]
+  createdAt   DateTime @default(now())
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String
+  slug  String @unique
+  posts PostTag[]
+}
+
+model Post {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  excerpt     String
+  content     String        @db.Text
+  coverImage  String?
+  status      ContentStatus @default(DRAFT)
+  categoryId  String?
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  authorId    String?
+  author      User?         @relation("PostAuthor", fields: [authorId], references: [id])
+  seoTitle    String?
+  seoDesc     String?
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  tags        PostTag[]
+
+  @@index([status, publishedAt])
+}
+
+model PostTag {
+  postId String
+  tagId  String
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model HexagramContent {
+  id            Int      @id
+  nameVi        String
+  nameCn        String?
+  binary        String
+  overview      String   @db.Text
+  career        String   @db.Text
+  wealth        String   @db.Text
+  love          String   @db.Text
+  family        String   @db.Text
+  health        String   @db.Text
+  advice        String   @db.Text
+  fortuneLevel  String
+  updatedAt     DateTime @updatedAt
+}
+
+model FortuneStick {
+  id        String   @id @default(cuid())
+  setKey    String
+  number    Int
+  title     String
+  verse     String   @db.Text
+  meaning   String   @db.Text
+  level     String
+  createdAt DateTime @default(now())
+
+  @@unique([setKey, number])
+}
+
+model QueryHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolKey   String
+  inputJson String   @db.Text
+  resultJson String  @db.Text
+  seed      String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, toolKey])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolKey   String
+  title     String
+  payload   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

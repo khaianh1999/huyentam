@@ -1,69 +1,110 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
+import { PageShell } from "@/components/layout/PageShell";
+import { HeroSection } from "@/components/home/HeroSection";
+import { SectionHeading } from "@/components/shared/SectionHeading";
+import { ToolCard } from "@/components/shared/ToolCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { POPULAR_TOOLS, TOOL_CATALOG } from "@/data/tools/catalog";
+import { BLOG_POSTS } from "@/data/blog/posts";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export default function Home() {
+export const metadata = createPageMetadata({
+  title: "Huyền Tâm",
+  description:
+    "Phong thủy, tử vi, lịch âm dương, xem ngày tốt, gieo quẻ Kinh Dịch và kiến thức tâm linh Việt Nam.",
+  path: "/",
+});
+
+export default function HomePage() {
+  const posts = BLOG_POSTS.slice(0, 3);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <PageShell width="wide" hideRail>
+      <Suspense fallback={<div className="h-56 rounded-2xl border border-accent/30 bg-card/40" />}>
+        <HeroSection />
+      </Suspense>
+
+      <section className="mt-10">
+        <SectionHeading
+          eyebrow="Công cụ"
+          title="Danh mục công cụ phong thủy & tâm linh"
+          description="Mỗi công cụ có luồng riêng, thuật toán tách module, và ghi rõ đâu là tính toán, đâu là quan niệm dân gian."
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {TOOL_CATALOG.map((tool) => (
+            <ToolCard
+              key={tool.href + tool.title}
+              title={tool.title}
+              description={tool.description}
+              href={tool.href}
+              iconName={tool.icon}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div>
+          <SectionHeading
+            eyebrow="Nổi bật"
+            title="Bài viết phong thủy & kiến thức"
+            description="Nội dung SEO về lịch âm, ngũ hành, Kinh Dịch và văn hóa thờ cúng."
+          />
+          <div className="mt-6 grid gap-4">
+            {posts.map((post) => (
+              <Card key={post.slug}>
+                <CardHeader>
+                  <p className="text-xs uppercase tracking-wider text-bronze">
+                    {post.category}
+                  </p>
+                  <CardTitle className="text-xl">
+                    <Link href={`/kien-thuc/${post.slug}`} className="hover:text-primary">
+                      {post.title}
+                    </Link>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {post.excerpt}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <Button asChild variant="outline" className="mt-4">
+            <Link href="/kien-thuc">Xem tất cả kiến thức</Link>
+          </Button>
+        </div>
+
+        <div>
+          <SectionHeading
+            eyebrow="Phổ biến"
+            title="Công cụ được dùng nhiều"
+            description="Lối tắt tới các trải nghiệm người dùng quay lại thường xuyên."
+          />
+          <div className="mt-6 grid gap-3">
+            {POPULAR_TOOLS.map((tool) => (
+              <Link
+                key={tool.href + tool.title}
+                href={tool.href}
+                className="paper-card gold-border flex items-start justify-between gap-3 rounded-xl p-4 transition hover:-translate-y-0.5"
+              >
+                <span>
+                  <span className="ink-heading block text-base text-ink">
+                    {tool.title}
+                  </span>
+                  <span className="mt-1 block text-sm text-muted-foreground">
+                    {tool.category}
+                  </span>
+                </span>
+                <span className="text-sm text-bronze">Mở</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+    </PageShell>
   );
 }
