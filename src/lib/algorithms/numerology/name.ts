@@ -1,6 +1,9 @@
 import type { Gender, NguHanh, NumerologyResult, SolarDate } from "@/types";
 import { getBanMenhByYear, relation } from "@/lib/algorithms/feng-shui/ngu-hanh";
-import { NGU_HANH_VI } from "@/lib/algorithms/calendar/constants";
+import { CAN_VI, CHI_VI, NGU_HANH_VI } from "@/lib/algorithms/calendar/constants";
+import { getYearCanChi } from "@/lib/algorithms/calendar/can-chi";
+import { solarToLunar } from "@/lib/algorithms/calendar/lunar";
+import { lookupGivenName, type GivenName } from "@/data/name/given-names";
 
 const LETTER_MAP: Record<string, number> = {
   a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, i: 9,
@@ -95,7 +98,8 @@ export function analyzeName(
   );
   const path = lifePath(birthDate);
   const nameElement = nameElementFromDestiny(destiny);
-  const birthElement = getBanMenhByYear(birthDate.year).element;
+  const lunarYear = solarToLunar(birthDate.day, birthDate.month, birthDate.year).year;
+  const birthElement = getBanMenhByYear(lunarYear).element;
   const rel = relation(nameElement, birthElement);
   const harmony =
     rel === "cung" || rel === "sinh" || rel === "duoc-sinh"
@@ -120,4 +124,65 @@ export function analyzeName(
     disclaimer:
       "Thần số học Pythagore và đối chiếu ngũ hành tên là hệ thống diễn giải hiện đại/dân gian, mang tính tham khảo văn hóa, không phải kết luận khoa học hay định mệnh.",
   };
+}
+
+function digitSum(n: number): number {
+  return String(n)
+    .split("")
+    .reduce((sum, d) => sum + Number(d), 0);
+}
+
+/** Rút về 1 đến 9, không giữ số bậc thầy (dùng cho năm cá nhân). */
+function reduceSimple(n: number): number {
+  let x = n;
+  while (x > 9) x = digitSum(x);
+  return x;
+}
+
+export interface NamePart {
+  word: string;
+  role: "ho" | "dem" | "ten";
+  number: number;
+  given: GivenName | null;
+}
+
+export interface NameDetail {
+  maturity: number;
+  parts: NamePart[];
+  lunarYear: number;
+  canChi: string;
+  napAm: string;
+  relation: ReturnType<typeof relation>;
+  givenElement: NguHanh | null;
+  givenRelation: ReturnType<typeof relation> | null;
+}
+
+/** Phần luận chi tiết thêm: số trưởng thành, số từng chữ, ý nghĩa tên chính, quan hệ ngũ hành. */
+export function analyzeNameDetail(result: NumerologyResult): NameDetail {
+  const words = result.fullName.trim().split(/\s+/).filter(Boolean);
+  const parts: NamePart[] = words.map((word, index) => ({
+    word,
+    role: index === words.length - 1 ? "ten" : index === 0 && words.length > 1 ? "ho" : "dem",
+    number: reduceNumber(sumLetters(normalizeName(word), () => true)),
+    given: index === words.length - 1 ? lookupGivenName(word) : null,
+  }));
+  const { birthDate } = result;
+  const lunarYear = solarToLunar(birthDate.day, birthDate.month, birthDate.year).year;
+  const menh = getBanMenhByYear(lunarYear);
+  const given = parts.at(-1)?.given ?? null;
+  return {
+    maturity: reduceNumber(result.lifePath + result.destiny),
+    parts,
+    lunarYear,
+    canChi: `${CAN_VI[getYearCanChi(lunarYear).can]} ${CHI_VI[getYearCanChi(lunarYear).chi]}`,
+    napAm: menh.napAm,
+    relation: relation(result.nameElement, result.birthElement),
+    givenElement: given?.element ?? null,
+    givenRelation: given ? relation(given.element, result.birthElement) : null,
+  };
+}
+
+/** Năm cá nhân trong chu kỳ 9 năm, tính theo ngày tháng sinh và năm đang xét. */
+export function personalYear(birth: SolarDate, year: number): number {
+  return reduceSimple(digitSum(birth.day) + digitSum(birth.month) + digitSum(year));
 }

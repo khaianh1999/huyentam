@@ -1,14 +1,12 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { connection } from "next/server";
+import { TodaySign } from "./TodaySign";
 import { PageShell } from "@/components/layout/PageShell";
 import { SignFinder } from "@/components/divination/SignFinder";
 import { Subnav, TU_VI_LINKS } from "@/components/divination/Subnav";
 import { Disclaimer } from "@/components/shared/Disclaimer";
 import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
 import { WESTERN_NOTE, WESTERN_SIGNS } from "@/data/zodiac";
-import { signFromMonthDay } from "@/lib/algorithms/astrology/cung-reading";
-import { vnDateParts } from "@/lib/divination/vn-date";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
@@ -52,21 +50,5 @@ export default function SignsPage() {
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{WESTERN_NOTE}</p>
       </div>
     </PageShell>
-  );
-}
-
-async function TodaySign() {
-  await connection();
-  const today = vnDateParts(new Date());
-  const sign = signFromMonthDay(today.month, today.day);
-  if (!sign) return null;
-  return (
-    <p className="mt-4 text-sm text-wood">
-      {today.label} nằm trong khoảng ngày của cung {sign.name}.{" "}
-      <Link href={`/cung-hoang-dao/${sign.id}`} className="text-primary underline-offset-4 hover:underline">
-        Đọc cung này
-      </Link>
-      .
-    </p>
   );
 }

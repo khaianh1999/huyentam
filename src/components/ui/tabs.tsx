@@ -66,7 +66,7 @@ function TabsList({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="tabs-list"
       role="tablist"
       className={cn(
-        "inline-flex w-fit max-w-full flex-wrap items-center gap-1 rounded-xl border border-accent/40 bg-card/80 p-1",
+        "inline-flex w-fit max-w-full flex-wrap items-center gap-1 rounded-xl border border-border bg-muted/60 p-1",
         className,
       )}
       {...props}
@@ -94,7 +94,7 @@ function TabsTrigger({
       data-state={active ? "active" : "inactive"}
       className={cn(
         "relative inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
-        active && "text-primary",
+        active && "bg-card text-primary shadow-sm",
         className,
       )}
       onClick={() => setValue(value)}

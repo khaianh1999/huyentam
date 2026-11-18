@@ -1,13 +1,8 @@
 import { Suspense } from "react";
-import Link from "next/link";
-import { connection } from "next/server";
+import { TodayHex } from "./TodayHex";
 import { PageShell } from "@/components/layout/PageShell";
-import { HexagramView } from "@/components/divination/HexagramView";
 import { GIEO_QUE_LINKS, Subnav } from "@/components/divination/Subnav";
 import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
-import { Button } from "@/components/ui/button";
-import { pickRandomHexagram } from "@/lib/algorithms/kinh-dich/hexagram";
-import { vnDateParts } from "@/lib/divination/vn-date";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
@@ -32,25 +27,5 @@ export default function TodayHexPage() {
         <TodayHex />
       </Suspense>
     </PageShell>
-  );
-}
-
-async function TodayHex() {
-  await connection();
-  const today = vnDateParts(new Date());
-  const result = pickRandomHexagram(`que-hom-nay:${today.key}`);
-  return (
-    <div className="space-y-6">
-      <p className="text-sm text-wood">Ngày đang dùng: {today.label}.</p>
-      <div className="flex flex-wrap gap-2">
-        <Button asChild variant="outline">
-          <Link href="/gieo-que/kinh-dich">Gieo một quẻ riêng</Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/gieo-que/lac-que">Lắc ống</Link>
-        </Button>
-      </div>
-      <HexagramView result={result} caption="Quẻ của ngày" />
-    </div>
   );
 }

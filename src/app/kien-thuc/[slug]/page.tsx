@@ -5,9 +5,12 @@ import { MarkdownBody } from "@/components/blog/MarkdownBody";
 import { Disclaimer } from "@/components/shared/Disclaimer";
 import { Badge } from "@/components/ui/badge";
 import { BLOG_POSTS } from "@/data/blog/posts";
+import { BLOG_COVERS } from "@/data/blog/covers";
+import { PostCover } from "@/components/blog/PostCover";
 import { parseMarkdown } from "@/lib/blog/markdown";
 import { findPost, formatPublished, relatedPosts } from "@/lib/blog/query";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/seo/site";
 
 export function generateStaticParams() {
   return BLOG_POSTS.map((post) => ({ slug: post.slug }));
@@ -20,14 +23,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: post?.title ?? "Bài viết",
     description: post?.excerpt ?? "Bài kiến thức trên Huyền Tâm.",
     path: `/kien-thuc/${slug}`,
+    keywords: post?.tags,
+    type: "article",
+    publishedTime: post?.publishedAt,
+    image: post && BLOG_COVERS[post.slug] ? { path: BLOG_COVERS[post.slug].src, alt: BLOG_COVERS[post.slug].alt } : undefined,
   });
 }
 
 function articleJsonLd(slug: string) {
   const post = findPost(slug);
   if (!post) return null;
-  const origin = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/$/, "");
-  const path = `/kien-thuc/${post.slug}`;
+  const url = absoluteUrl(`/kien-thuc/${post.slug}`);
   return JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Article",
@@ -38,9 +44,16 @@ function articleJsonLd(slug: string) {
     articleSection: post.category,
     keywords: post.tags.join(", "),
     timeRequired: `PT${post.readingMinutes}M`,
-    author: { "@type": "Organization", name: "Huyền Tâm" },
-    publisher: { "@type": "Organization", name: "Huyền Tâm" },
-    mainEntityOfPage: origin ? `${origin}${path}` : path,
+    dateModified: post.publishedAt,
+    image: absoluteUrl(BLOG_COVERS[post.slug]?.src ?? OG_IMAGE.path),
+    url,
+    author: { "@type": "Organization", name: SITE_NAME, url: absoluteUrl("/") },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: absoluteUrl("/icon-512.png") },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
   }).replace(/</g, "\\u003c");
 }
 
@@ -66,6 +79,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       {jsonLd ? (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       ) : null}
+
+      <PostCover post={post} credit="link" eager className="mb-6 aspect-[1200/630] max-h-[420px] w-full rounded-2xl sm:aspect-[21/9]" />
 
       <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         <Badge variant="gold">{post.category}</Badge>

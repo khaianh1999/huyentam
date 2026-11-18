@@ -1,11 +1,11 @@
 import { PageShell } from "@/components/layout/PageShell";
-import { MarriageStudio } from "@/components/divination/FolkStudios";
+import { AgeMatch } from "@/components/divination/AgeMatch";
 import { BOI_TOAN_LINKS, Subnav } from "@/components/divination/Subnav";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
   title: "Tuổi vợ chồng",
-  description: "Xem tuổi và bản mệnh của vợ chồng theo quan niệm dân gian.",
+  description: "Xem tuổi vợ chồng theo 5 tiêu chí: mệnh, thiên can, địa chi, cung phi Bát trạch, ngũ hành cung phi; kèm năm cưới đẹp, năm sinh con hợp tuổi và hướng nhà.",
   path: "/boi-toan/tuoi-vo-chong",
 });
 
@@ -13,7 +13,7 @@ export default function MarriagePage() {
   return (
     <PageShell
       title="Tuổi vợ chồng"
-      description="Khác trang tuổi hợp: ở đây có vai chồng, vai vợ, bản mệnh ngũ hành và lời về nhà cùng hai họ."
+      description="Chấm điểm theo 5 tiêu chí truyền thống, gợi ý năm cưới tránh kim lâu, tam tai, năm sinh con hợp tuổi bố mẹ và hướng nhà theo cung phi người chồng."
       breadcrumbs={[
         { label: "Trang chủ", href: "/" },
         { label: "Bói toán", href: "/boi-toan" },
@@ -21,7 +21,7 @@ export default function MarriagePage() {
       ]}
     >
       <Subnav items={BOI_TOAN_LINKS} />
-      <MarriageStudio />
+      <AgeMatch mode="vo-chong" />
     </PageShell>
   );
 }

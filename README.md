@@ -27,11 +27,10 @@ Khi có PostgreSQL:
 ```bash
 # trong .env
 DATABASE_URL="postgresql://..."
-AUTH_SECRET="chuoi-bi-mat-dai"
 npx prisma db push
 ```
 
-Không có `DATABASE_URL` thì site vẫn chạy: thuật toán/dữ liệu JSON hoạt động bình thường; đăng nhập dùng session demo; hồ sơ lưu localStorage.
+Không có `DATABASE_URL` thì site vẫn chạy: thuật toán/dữ liệu JSON hoạt động bình thường; hồ sơ lưu localStorage. Site không có đăng nhập.
 
 ## Kiến trúc chính
 
@@ -64,3 +63,20 @@ src/
 ## Admin
 
 Truy cập `/admin` để xem CMS (bài viết, 64 quẻ, xin xăm, SEO, cấu hình). Hiện chưa khóa role — nên bảo vệ bằng auth/role trước khi production.
+
+## Deploy GitHub Pages (bản tĩnh)
+
+`npm run build:static` xuất site tĩnh ra `./out`. Script ([scripts/build-static.mjs](scripts/build-static.mjs)) copy dự án sang `.static-build/`, bỏ các route cần server (`/api`, `/admin`) rồi chạy `next build` với `output: "export"`. Thư mục `src/` không bị sửa, nên chạy được cả khi `next dev` đang mở.
+
+- Bản tĩnh không có admin, database.
+- Ngày hôm nay và các trang đọc query (`/ket-qua/*`, `/tim-kiem`, `/xem-ngay-tot`…) được tính trên trình duyệt.
+- `/lich-am-duong/[ngay]` được sinh sẵn từ 2 năm trước tới 3 năm sau (khoảng 450 MB). Đổi bằng `STATIC_CALENDAR_YEARS_BEFORE` / `STATIC_CALENDAR_YEARS_AFTER`.
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/huyentam NEXT_PUBLIC_SITE_URL=https://<user>.github.io/huyentam npm run build:static
+NEXT_PUBLIC_BASE_PATH=/huyentam npm run preview:static   # xem thử ở http://localhost:4173/huyentam/
+```
+
+Trong Git Bash trên Windows, thêm `MSYS_NO_PATHCONV=1` trước lệnh để `/huyentam` không bị đổi thành đường dẫn Windows.
+
+Tự deploy: workflow [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml) chạy khi push lên `master`. Cần bật một lần: **Settings → Pages → Source: GitHub Actions**. Base path và URL lấy tự động từ cấu hình Pages.

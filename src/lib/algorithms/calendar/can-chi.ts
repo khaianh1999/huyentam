@@ -5,8 +5,6 @@ import {
   CAN_VI,
   CHI_LIST,
   CHI_VI,
-  GIO_CHI_LABELS,
-  HOANG_DAO_CHI,
   NAP_AM_60,
   NGUYET_KY_DAYS,
   NGU_HANH_VI,
@@ -14,7 +12,18 @@ import {
   TIET_KHI,
   TRUC_12,
 } from "./constants";
-import { getJulianDay, solarToLunar } from "./lunar";
+import { TRUC_EFFECT } from "@/data/calendar/tu-28";
+import { getJulianDay, getSolarTermIndex, solarToLunar } from "./lunar";
+import {
+  getClashAges,
+  getDayStars,
+  getDirections,
+  getHours,
+  getLucDieu,
+  getTu28,
+  getTwelveGod,
+  isDuongCongKy,
+} from "./almanac";
 
 export function getYearCanChi(year: number): { can: Can; chi: Chi } {
   // Year stem/branch: Giáp Tý = 1984 reference, also works with (year + 6) % 10 / (year + 8) % 12
@@ -30,8 +39,8 @@ export function getMonthCanChi(
   const yearCanIndex = CAN_LIST.indexOf(yearCan);
   // Month branch: lunar month 1 = Dần
   const chi = CHI_LIST[(lunarMonth + 1) % 12];
-  // Month stem depends on year stem
-  const monthCanIndex = (yearCanIndex * 2 + lunarMonth) % 10;
+  // Ngũ hổ độn: năm Giáp, Kỷ thì tháng Giêng là Bính Dần; các năm sau tịnh tiến 2 can.
+  const monthCanIndex = (yearCanIndex * 2 + lunarMonth + 1) % 10;
   const can = CAN_LIST[monthCanIndex];
   return { can, chi };
 }
@@ -89,57 +98,18 @@ export function getTrucNgay(dayChi: Chi, monthChi: Chi): string {
   return TRUC_12[offset];
 }
 
-export function isHoangDaoDay(dayChi: Chi): boolean {
-  return HOANG_DAO_CHI.includes(dayChi);
+/** Chi tháng theo tiết: tháng Dần bắt đầu từ Lập xuân, dùng để an 12 trực. */
+export function getSolarMonthChi(solar: SolarDate): Chi {
+  const term = getSolarTermIndex(solar.day, solar.month, solar.year);
+  // Lập xuân có chỉ số 21; mỗi tháng tiết gồm hai khí.
+  return CHI_LIST[(2 + Math.floor(((term + 3) % 24) / 2)) % 12];
 }
 
-/** Giờ hoàng đạo theo chi ngày — quy ước dân gian phổ biến */
-export function getGioHoangDao(dayChi: Chi): string[] {
-  const map: Record<Chi, number[]> = {
-    Ty: [0, 1, 4, 5, 7, 8],
-    Suu: [2, 3, 5, 6, 9, 10],
-    Dan: [0, 1, 4, 5, 7, 8],
-    Mao: [2, 3, 5, 6, 9, 10],
-    Thin: [0, 1, 4, 5, 7, 8],
-    Ti: [2, 3, 5, 6, 9, 10],
-    Ngo: [0, 1, 4, 5, 7, 8],
-    Mui: [2, 3, 5, 6, 9, 10],
-    Than: [0, 1, 4, 5, 7, 8],
-    Dau: [2, 3, 5, 6, 9, 10],
-    Tuat: [0, 1, 4, 5, 7, 8],
-    Hoi: [2, 3, 5, 6, 9, 10],
-  };
-  return (map[dayChi] ?? []).map((i) => GIO_CHI_LABELS[i]);
-}
-
-export function getGioHacDao(dayChi: Chi): string[] {
-  const good = new Set(getGioHoangDao(dayChi));
-  return GIO_CHI_LABELS.filter((g) => !good.has(g));
-}
-
-export function approximateTietKhi(solar: SolarDate): string {
-  // Approximate solar term by day-of-year buckets — labeled as approximation
-  const dayOfYear = Math.floor(
-    (Date.UTC(solar.year, solar.month - 1, solar.day) -
-      Date.UTC(solar.year, 0, 0)) /
-      86400000,
-  );
-  const idx = Math.min(23, Math.floor(((dayOfYear + 10) % 365) / 15.2));
-  return TIET_KHI[idx];
-}
-
-export function getSaoTotXau(truc: string, isHoang: boolean): {
-  saoTot: string[];
-  saoXau: string[];
-} {
-  const goodTruc = ["Kiến", "Trừ", "Mãn", "Định", "Thành", "Khai"];
-  const saoTot: string[] = [];
-  const saoXau: string[] = [];
-  if (isHoang) saoTot.push("Hoàng đạo");
-  else saoXau.push("Hắc đạo");
-  if (goodTruc.includes(truc)) saoTot.push(`Trực ${truc} thuận`);
-  else saoXau.push(`Trực ${truc} cần thận trọng`);
-  return { saoTot, saoXau };
+/** Tên tiết khí đang hành, tính theo hoàng kinh Mặt Trời giờ Việt Nam. */
+export function getTietKhi(solar: SolarDate): string {
+  const term = getSolarTermIndex(solar.day, solar.month, solar.year);
+  // TIET_KHI bắt đầu từ Tiểu hàn, chỉ số 19.
+  return TIET_KHI[(term + 5) % 24];
 }
 
 export function getTraditionalFestivals(lunar: LunarDate): string[] {
@@ -166,30 +136,40 @@ export function buildDaySummary(solar: SolarDate) {
   const canChi = getCanChiInfo(solar, lunar);
   const napAm = getNapAm(canChi.dayCan, canChi.dayChi);
   const nguHanh = getNguHanhFromCan(canChi.dayCan);
-  const truc = getTrucNgay(canChi.dayChi, canChi.monthChi);
-  const hoang = isHoangDaoDay(canChi.dayChi);
-  const { saoTot, saoXau } = getSaoTotXau(truc, hoang);
+  const truc = getTrucNgay(canChi.dayChi, getSolarMonthChi(solar));
+  const dayGod = getTwelveGod(canChi.monthChi, canChi.dayChi);
+  const hours = getHours(canChi.dayCan, canChi.dayChi);
+  const stars = getDayStars(lunar.month, canChi.dayCan, canChi.dayChi);
   return {
     solar,
     lunar,
     canChi,
-    tietKhi: approximateTietKhi(solar),
+    tietKhi: getTietKhi(solar),
     truc,
-    saoTot,
-    saoXau,
-    isHoangDao: hoang,
-    isHacDao: !hoang,
-    gioHoangDao: getGioHoangDao(canChi.dayChi),
-    gioHacDao: getGioHacDao(canChi.dayChi),
+    trucSummary: TRUC_EFFECT[truc]?.summary ?? "",
+    saoTot: stars.filter((star) => star.kind === "good").map((star) => star.name),
+    saoXau: stars.filter((star) => star.kind === "bad").map((star) => star.name),
+    stars,
+    dayGod: dayGod.name,
+    isHoangDao: dayGod.good,
+    isHacDao: !dayGod.good,
+    hours,
+    gioHoangDao: hours.filter((hour) => hour.isGood).map((hour) => hour.label),
+    gioHacDao: hours.filter((hour) => !hour.isGood).map((hour) => hour.label),
+    tu: getTu28(getJulianDay(solar.day, solar.month, solar.year)),
+    directions: getDirections(canChi.dayCan, canChi.dayChi),
+    clashAges: getClashAges(canChi.dayCan, canChi.dayChi),
+    lucDieu: getLucDieu(lunar),
     isTamNuong: TAM_NUONG_DAYS.includes(lunar.day),
     isNguyetKy: NGUYET_KY_DAYS.includes(lunar.day),
-    isSatChu: lunar.day === 5 || lunar.day === 14 || lunar.day === 23, // folk; overlapped labeling noted in UI
+    isSatChu: stars.some((star) => star.name === "Sát chủ"),
+    isDuongCong: isDuongCongKy(lunar),
     napAm,
     nguHanh,
     nguHanhLabel: NGU_HANH_VI[nguHanh],
     festivals: getTraditionalFestivals(lunar),
     disclaimer:
-      "Can chi, âm lịch và nạp âm được tính theo thuật toán thiên văn/quy ước lịch Việt. Hoàng đạo, trực, tam nương, nguyệt kỵ mang tính quan niệm dân gian tham khảo, không phải kết luận khoa học.",
+      "Âm lịch, can chi, tiết khí và nạp âm được tính theo thuật toán lịch. Hoàng đạo, trực, sao tốt xấu, nhị thập bát tú và các ngày kỵ là quan niệm dân gian, ghi lại để tham khảo.",
   };
 }
 

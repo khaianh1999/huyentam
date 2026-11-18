@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { analyzeName } from "@/lib/algorithms/numerology/name";
 import { isRealDate, nameResultHref, parseBoundedInt } from "@/lib/divination/params";
 import type { Gender } from "@/types";
@@ -12,6 +13,7 @@ import { NameNumbers } from "@/components/divination/NameNumbers";
 import { cn } from "@/lib/utils";
 
 export function NameForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [year, setYear] = useState("1996");
   const [month, setMonth] = useState("6");
@@ -46,7 +48,7 @@ export function NameForm() {
             return;
           }
           setError(null);
-          window.location.assign(href);
+          router.push(href);
         }}
       >
         <div className="sm:col-span-2 lg:col-span-4">

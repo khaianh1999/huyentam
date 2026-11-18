@@ -1,11 +1,10 @@
 import { Suspense } from "react";
 import { PageShell } from "@/components/layout/PageShell";
-import { StickDraw } from "@/components/divination/StickDraw";
 import { BOI_TOAN_LINKS, Subnav } from "@/components/divination/Subnav";
 import { Disclaimer } from "@/components/shared/Disclaimer";
 import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
-import { firstParam, type SearchRecord } from "@/lib/divination/params";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { Draw } from "./Draw";
 
 export const metadata = createPageMetadata({
   title: "Xin xăm đầu năm",
@@ -14,11 +13,7 @@ export const metadata = createPageMetadata({
   path: "/boi-toan/xin-xam-dau-nam",
 });
 
-export default function XinXamDauNamPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchRecord>;
-}) {
+export default function XinXamDauNamPage() {
   return (
     <PageShell
       title="Xin xăm đầu năm"
@@ -40,14 +35,9 @@ export default function XinXamDauNamPage({
       <Disclaimer type="quan-niem-dan-gian" />
       <div className="mt-8">
         <Suspense fallback={<LoadingYinYang label="Đang mở ống xăm đầu năm…" />}>
-          <Draw searchParams={searchParams} />
+          <Draw />
         </Suspense>
       </div>
     </PageShell>
   );
-}
-
-async function Draw({ searchParams }: { searchParams: Promise<SearchRecord> }) {
-  const seed = firstParam((await searchParams).seed);
-  return <StickDraw tone="am" initialSeed={seed} />;
 }

@@ -53,6 +53,30 @@ export interface CanChiInfo {
   yearLabel: string;
 }
 
+/** Nhóm việc dùng để đối chiếu sao, trực và nhị thập bát tú. */
+export type ActivityTag = "cuoi" | "xay" | "an-tang" | "nhap-trach" | "xuat-hanh" | "giao-dich";
+
+export interface AlmanacStar {
+  name: string;
+  kind: "good" | "bad";
+  /** Tác động mọi việc, hay chỉ các nhóm việc trong good/bad. */
+  all: boolean;
+  good: ActivityTag[];
+  bad: ActivityTag[];
+  /** Sao tốt có khả năng giải bớt sao xấu. */
+  resolves: boolean;
+  /** Việc khác ngoài các nhóm chính, ví dụ lễ bái. */
+  other?: string;
+}
+
+export interface HourDetail {
+  chi: Chi;
+  label: string;
+  canChi: string;
+  god: string;
+  isGood: boolean;
+}
+
 export interface DayDetail {
   solar: SolarDate;
   lunar: LunarDate;
@@ -68,6 +92,17 @@ export interface DayDetail {
   isTamNuong: boolean;
   isNguyetKy: boolean;
   isSatChu: boolean;
+  isDuongCong: boolean;
+  /** Thần trực nhật trong 12 thần hoàng đạo, hắc đạo. */
+  dayGod: string;
+  trucSummary: string;
+  tu: { name: string; fullName: string; type: "cat" | "binh" | "hung"; animal: string; good: ActivityTag[]; bad: ActivityTag[] };
+  stars: AlmanacStar[];
+  hours: HourDetail[];
+  directions: { hyThan: string; taiThan: string; hacThan: string };
+  /** Các tuổi (can chi) xung khắc với ngày. */
+  clashAges: string[];
+  lucDieu: { name: string; good: boolean };
   napAm: string;
   nguHanh: NguHanh;
   festivals: string[];
@@ -168,12 +203,26 @@ export interface DayPurpose {
   description: string;
 }
 
+export interface AssessmentFactor {
+  group: "than" | "truc" | "tu" | "sao" | "ky" | "tuoi" | "luc-dieu";
+  label: string;
+  delta: number;
+  detail: string;
+}
+
 export interface DayAssessment {
   date: SolarDate;
   purpose: DayPurpose;
   score: number;
   rating: "tot" | "trung-binh" | "nen-tranh" | "xau";
   reasons: string[];
+  /** Từng yếu tố cộng trừ điểm, theo đúng thứ tự tính. */
+  factors: AssessmentFactor[];
+  /** Cảnh báo cấp năm hoặc ngày đại kỵ. */
+  warnings: string[];
+  verdict: string;
+  /** Giờ nên chọn: hoàng đạo và không xung tuổi. */
+  bestHours: string[];
   dayDetail: DayDetail;
   goodHours: string[];
   badHours: string[];

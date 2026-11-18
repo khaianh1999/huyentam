@@ -2,35 +2,36 @@
 @import "tw-animate-css";
 
 :root {
-  /* Oriental premium palette */
-  --background: #f7f1e6;
-  --foreground: #1a120b;
-  --card: #fffaf2;
-  --card-foreground: #1a120b;
-  --popover: #fffaf2;
-  --popover-foreground: #1a120b;
-  --primary: #8b1e1e;
-  --primary-foreground: #fff8e7;
-  --secondary: #2a2118;
-  --secondary-foreground: #f3e6c8;
-  --muted: #ebe0d0;
-  --muted-foreground: #6b5848;
-  --accent: #c9a227;
-  --accent-foreground: #1a120b;
+  /* Oriental premium palette — warm rice paper, lacquer red, muted gold */
+  --background: #f8f3ea;
+  --foreground: #1f1712;
+  --card: #fffdf8;
+  --card-foreground: #1f1712;
+  --popover: #fffdf8;
+  --popover-foreground: #1f1712;
+  --primary: #8e2320;
+  --primary-foreground: #fff8ec;
+  --secondary: #221a14;
+  --secondary-foreground: #f1e5cb;
+  --muted: #f1e8d8;
+  --muted-foreground: #6c5b4c;
+  --accent: #c49a3a;
+  --accent-foreground: #1f1712;
   --destructive: #7f1d1d;
-  --destructive-foreground: #fff8e7;
-  --border: #d6c4a4;
-  --input: #d6c4a4;
-  --ring: #c9a227;
+  --destructive-foreground: #fff8ec;
+  --border: #e5d7bd;
+  --input: #ddcdb0;
+  --ring: #c49a3a;
   --jade: #0f766e;
   --jade-foreground: #ecfdf5;
-  --ink: #0c0a09;
-  --paper: #f7f1e6;
-  --bronze: #a67c2d;
-  --wood: #5c4033;
+  --ink: #1a130e;
+  --paper: #f8f3ea;
+  --bronze: #9a7330;
+  --wood: #5a4334;
   --radius: 0.9rem;
-  --shadow-soft: 0 10px 40px rgba(26, 18, 11, 0.12);
-  --shadow-gold: 0 0 0 1px rgba(201, 162, 39, 0.35), 0 12px 32px rgba(139, 30, 30, 0.08);
+  --shadow-soft: 0 1px 2px rgba(31, 23, 18, 0.04), 0 12px 32px -14px rgba(31, 23, 18, 0.18);
+  --shadow-lift: 0 2px 4px rgba(31, 23, 18, 0.04), 0 22px 44px -18px rgba(31, 23, 18, 0.26);
+  --shadow-gold: 0 1px 2px rgba(31, 23, 18, 0.04), 0 12px 30px -16px rgba(142, 35, 32, 0.22);
 }
 
 @theme inline {
@@ -73,16 +74,17 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 162, 39, 0.18), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(139, 30, 30, 0.08), transparent),
-    linear-gradient(180deg, #faf4ea 0%, #f3ead9 40%, #efe4d2 100%);
+    radial-gradient(ellipse 70% 40% at 50% -10%, rgba(196, 154, 58, 0.14), transparent),
+    linear-gradient(180deg, #faf6ee 0%, #f7f1e6 50%, #f3ebdd 100%);
   color: var(--foreground);
   font-family: var(--font-body), "Be Vietnam Pro", system-ui, sans-serif;
   min-height: 100vh;
+  text-rendering: optimizeLegibility;
 }
 
 body::before {
@@ -91,35 +93,77 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 0;
-  opacity: 0.035;
+  opacity: 0.025;
   background-image:
     url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a120b' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .oriental-pattern {
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(201, 162, 39, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 80% 0%, rgba(139, 30, 30, 0.1) 0%, transparent 35%);
+    radial-gradient(circle at 20% 20%, rgba(196, 154, 58, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 0%, rgba(142, 35, 32, 0.08) 0%, transparent 35%);
 }
 
+/* Thin gold hairline + soft shadow. Interactive cards lift on hover. */
 .gold-border {
+  border: 1px solid rgba(196, 154, 58, 0.32);
   box-shadow: var(--shadow-gold);
-  border: 1px solid rgba(201, 162, 39, 0.45);
 }
 
 .paper-card {
-  background: linear-gradient(160deg, #fffaf2 0%, #f8efe0 100%);
+  background: linear-gradient(170deg, #fffdf8 0%, #fbf5ea 100%);
+  border: 1px solid rgba(196, 154, 58, 0.24);
   box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+a.paper-card:hover,
+a.gold-border:hover {
+  border-color: rgba(196, 154, 58, 0.6);
+  box-shadow: var(--shadow-lift);
 }
 
 .ink-heading {
   font-family: var(--font-display), "Noto Serif", serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
 .mist-glow {
-  background: radial-gradient(circle, rgba(201, 162, 39, 0.25), transparent 70%);
+  background: radial-gradient(circle, rgba(196, 154, 58, 0.25), transparent 70%);
   filter: blur(40px);
+}
+
+/* Page title band shared by every inner page. */
+.page-banner {
+  background:
+    radial-gradient(ellipse 50% 120% at 100% 0%, rgba(196, 154, 58, 0.16), transparent 70%),
+    radial-gradient(ellipse 40% 90% at 0% 100%, rgba(142, 35, 32, 0.06), transparent 70%),
+    linear-gradient(180deg, #fffaf1 0%, #f8f1e4 100%);
+}
+
+/* Dark lacquer surface (hero, footer, highlight cards). */
+.lacquer {
+  background:
+    radial-gradient(ellipse 60% 70% at 85% 10%, rgba(196, 154, 58, 0.22), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(15, 118, 110, 0.16), transparent 70%),
+    linear-gradient(135deg, #2b1311 0%, #4a1a17 45%, #1c1410 100%);
+}
+
+/* Faint repeating cloud-scroll motif for dark surfaces. */
+.cloud-motif {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M0 45c10 0 15-10 25-10s15 10 25 10 15-10 25-10 15 10 25 10 15-10 20-10' fill='none' stroke='%23c49a3a' stroke-opacity='0.18' stroke-width='1'/%3E%3Ccircle cx='25' cy='22' r='6' fill='none' stroke='%23c49a3a' stroke-opacity='0.12'/%3E%3Ccircle cx='85' cy='18' r='4' fill='none' stroke='%23c49a3a' stroke-opacity='0.12'/%3E%3C/svg%3E");
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bronze);
 }
 
 @keyframes coin-flip {
@@ -145,6 +189,30 @@ body::before {
   100% { opacity: 0.2; transform: translateY(12px); }
 }
 
+/* Thẻ tre trong ống xăm; biên độ tăng theo --energy đặt trên ống. */
+.tube-stick {
+  background: linear-gradient(90deg, #c8964c, #f0d394, #b98640);
+  transform: rotate(var(--r));
+  transform-origin: bottom center;
+}
+
+.tube-stick.is-rattling {
+  animation: stick-rattle 0.16s ease-in-out infinite alternate;
+}
+
+.shake-tube {
+  will-change: transform;
+}
+
+@keyframes stick-rattle {
+  from {
+    transform: translateY(0) rotate(var(--r));
+  }
+  to {
+    transform: translateY(calc(var(--energy, 0) * -9px)) rotate(calc(var(--r) + var(--energy, 0) * 5deg));
+  }
+}
+
 .animate-coin-flip {
   animation: coin-flip 0.9s ease-in-out;
 }
@@ -162,6 +230,18 @@ body::before {
 }
 
 ::selection {
-  background: rgba(139, 30, 30, 0.2);
-  color: #1a120b;
+  background: rgba(142, 35, 32, 0.18);
+  color: #1a130e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .paper-card {
+    transition: none;
+  }
+  .tube-stick.is-rattling {
+    animation: none;
+  }
 }

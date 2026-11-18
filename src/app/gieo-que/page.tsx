@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { PageShell } from "@/components/layout/PageShell";
 import { GIEO_QUE_LINKS, Subnav } from "@/components/divination/Subnav";
 import { createPageMetadata } from "@/lib/seo/metadata";
@@ -55,14 +56,17 @@ export default function GieoQuePage() {
           <Link
             key={way.href}
             href={way.href}
-            className="paper-card gold-border grid gap-3 rounded-2xl p-6 transition hover:-translate-y-0.5 sm:grid-cols-[8rem_1fr]"
+            className="paper-card group grid items-center gap-3 rounded-2xl p-6 hover:-translate-y-0.5 sm:grid-cols-[9rem_1fr_auto]"
           >
             <p className="text-xs tracking-[0.18em] text-bronze uppercase">
               0{index + 1} · {way.eyebrow}
             </p>
             <span>
-              <span className="ink-heading block text-2xl text-ink">{way.title}</span>
+              <span className="ink-heading block text-2xl text-ink transition-colors group-hover:text-primary">{way.title}</span>
               <span className="mt-2 block text-sm leading-relaxed text-muted-foreground">{way.body}</span>
+            </span>
+            <span className="hidden size-10 place-items-center rounded-full border border-accent/40 text-bronze transition-colors group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground sm:grid">
+              <ArrowRight className="size-4" aria-hidden="true" />
             </span>
           </Link>
         ))}

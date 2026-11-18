@@ -110,10 +110,22 @@ export function castHexagram(seed: string): HexagramResult {
   };
 }
 
+/** Trang rút quẻ phục vụ giải trí nên quẻ lành có cơ hội rơi ra cao hơn quẻ khó. */
+const PICK_WEIGHT = { "dai-cat": 6, cat: 4, binh: 2, hung: 0.6, "dai-hung": 0.3 } as const;
+const PICK_TOTAL = HEXAGRAMS.reduce((sum, item) => sum + PICK_WEIGHT[item.fortuneLevel], 0);
+
+function pickWeighted(roll: number) {
+  let remaining = roll * PICK_TOTAL;
+  for (const item of HEXAGRAMS) {
+    remaining -= PICK_WEIGHT[item.fortuneLevel];
+    if (remaining < 0) return item;
+  }
+  return HEXAGRAMS[0];
+}
+
 export function pickRandomHexagram(seed: string): HexagramResult {
   const rng = createRng(seed);
-  const idx = Math.floor(rng() * 64);
-  const primary = HEXAGRAMS[idx] ?? HEXAGRAMS[0];
+  const primary = pickWeighted(rng());
   const lines: HexagramLine[] = primary.binary.split("").map((b) => ({
     yang: b === "1",
     changing: false,
@@ -137,7 +149,7 @@ export function pickRandomHexagram(seed: string): HexagramResult {
     },
     seed,
     disclaimer:
-      "Quẻ được chọn bằng RNG có seed (có thể kiểm thử). Luận giải mang tính tham khảo văn hóa.",
+      "Lời quẻ mang tính giải trí và tham khảo văn hóa, chúc bạn một ngày thật an lành.",
   };
 }
 

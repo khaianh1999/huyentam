@@ -1,11 +1,11 @@
 import { PageShell } from "@/components/layout/PageShell";
-import { CoinStack } from "@/components/divination/CoinStack";
+import { CoinGame } from "@/components/divination/CoinGame";
 import { GIEO_QUE_LINKS, Subnav } from "@/components/divination/Subnav";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
   title: "Tung đồng xu",
-  description: "Lật từng đồng để dựng sáu hào Kinh Dịch từ dưới lên.",
+  description: "Chạm để tung ba đồng xu cổ, sáu lần thành một quẻ Kinh Dịch có hào động.",
   path: "/gieo-que/tung-dong-xu",
 });
 
@@ -13,7 +13,7 @@ export default function CoinPage() {
   return (
     <PageShell
       title="Tung đồng xu"
-      description="Khác với sáu nút tung một lần: ở đây mỗi đồng là một nút. Lật đủ ba mặt mới sang hào trên."
+      description="Chạm vào ba đồng xu để tung. Sáu lần tung dựng nên sáu hào, từ dưới lên trên."
       breadcrumbs={[
         { label: "Trang chủ", href: "/" },
         { label: "Gieo quẻ", href: "/gieo-que" },
@@ -21,7 +21,7 @@ export default function CoinPage() {
       ]}
     >
       <Subnav items={GIEO_QUE_LINKS} />
-      <CoinStack />
+      <CoinGame mode="manual" />
     </PageShell>
   );
 }

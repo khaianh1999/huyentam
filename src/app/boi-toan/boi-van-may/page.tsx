@@ -1,10 +1,8 @@
 import { Suspense } from "react";
-import { connection } from "next/server";
+import { Wheel } from "./Wheel";
 import { PageShell } from "@/components/layout/PageShell";
-import { FortuneWheel } from "@/components/divination/FolkStudios";
 import { BOI_TOAN_LINKS, Subnav } from "@/components/divination/Subnav";
 import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
-import { vnDateParts } from "@/lib/divination/vn-date";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
@@ -30,10 +28,4 @@ export default function FortunePage() {
       </Suspense>
     </PageShell>
   );
-}
-
-async function Wheel() {
-  await connection();
-  const today = vnDateParts(new Date());
-  return <FortuneWheel todayKey={today.key} todayLabel={today.label} />;
 }

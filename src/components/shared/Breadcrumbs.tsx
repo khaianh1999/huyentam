@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/seo/site";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export type BreadcrumbItem = {
   label: string;
@@ -16,6 +18,17 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   if (items.length === 0) {
     return null;
   }
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      ...(item.href ? { item: absoluteUrl(item.href) } : {}),
+    })),
+  };
 
   return (
     <nav aria-label="Đường dẫn" className={cn("text-sm", className)}>
@@ -43,6 +56,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           );
         })}
       </ol>
+      <JsonLd data={jsonLd} />
     </nav>
   );
 }

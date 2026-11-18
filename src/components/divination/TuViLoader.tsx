@@ -1,12 +1,15 @@
-import { connection } from "next/server";
-import { TuViStudio } from "@/components/divination/TuViStudio";
-import { vnDateParts } from "@/lib/divination/vn-date";
+"use client";
 
-export async function TuViLoader({
+import { TuViStudio } from "@/components/divination/TuViStudio";
+import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
+import { useVnToday } from "@/lib/client/use-vn-today";
+
+export function TuViLoader({
   mode,
 }: {
   mode: "studio" | "ngay" | "nam" | "thang";
 }) {
-  await connection();
-  return <TuViStudio mode={mode} today={vnDateParts(new Date())} />;
+  const today = useVnToday();
+  if (!today) return <LoadingYinYang label="Đang mở lá số…" />;
+  return <TuViStudio mode={mode} today={today} />;
 }

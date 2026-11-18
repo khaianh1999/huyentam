@@ -1,17 +1,19 @@
+"use client";
+
 import Link from "next/link";
-import { connection } from "next/server";
+import { useTodaySolar } from "@/lib/client/use-vn-today";
 import { buildDaySummary, formatLunarLabel } from "@/lib/algorithms/calendar/can-chi";
-import { dayPath, todayInVietnam } from "@/lib/calendar/dates";
+import { dayPath } from "@/lib/calendar/dates";
 import { Badge } from "@/components/ui/badge";
 
-/** Thẻ “Hôm nay” cho cột phải — phải bọc Suspense vì dùng connection(). */
-export async function SidebarToday() {
-  await connection();
-  const solar = todayInVietnam();
+/** Thẻ “Hôm nay” cho cột phải — ngày lấy ở trình duyệt để trang build tĩnh được. */
+export function SidebarToday() {
+  const solar = useTodaySolar();
+  if (!solar) return <TodayFallback />;
   const day = buildDaySummary(solar);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-accent/40 bg-gradient-to-br from-[#2a1212] via-[#4a1818] to-[#1a120b] p-3.5 text-[#fff8e7] shadow-[0_10px_28px_rgba(26,18,11,0.18)]">
+    <div className="lacquer overflow-hidden rounded-2xl border border-accent/40 p-4 text-[#fff8e7] shadow-[0_10px_28px_rgba(26,18,11,0.18)]">
       <p className="text-[10px] font-semibold tracking-[0.2em] text-accent uppercase">
         Hôm nay
       </p>
@@ -42,5 +44,14 @@ export async function SidebarToday() {
         Chi tiết ngày ›
       </Link>
     </div>
+  );
+}
+
+export function TodayFallback() {
+  return (
+    <div
+      className="h-[9.5rem] animate-pulse rounded-2xl bg-secondary/80"
+      aria-hidden="true"
+    />
   );
 }

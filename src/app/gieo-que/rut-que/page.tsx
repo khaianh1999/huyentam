@@ -1,11 +1,9 @@
 import { Suspense } from "react";
 import { PageShell } from "@/components/layout/PageShell";
-import { RutQueStudio } from "@/components/divination/RutQueStudio";
 import { GIEO_QUE_LINKS, Subnav } from "@/components/divination/Subnav";
 import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
-import { getRitual } from "@/data/divination/rituals";
-import { firstParam, type SearchRecord } from "@/lib/divination/params";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { Body } from "./Body";
 
 export const metadata = createPageMetadata({
   title: "Rút quẻ",
@@ -13,11 +11,7 @@ export const metadata = createPageMetadata({
   path: "/gieo-que/rut-que",
 });
 
-export default function RutQuePage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchRecord>;
-}) {
+export default function RutQuePage() {
   return (
     <PageShell
       title="Rút quẻ"
@@ -30,19 +24,8 @@ export default function RutQuePage({
     >
       <Subnav items={GIEO_QUE_LINKS} />
       <Suspense fallback={<LoadingYinYang label="Đang mở lối rút…" />}>
-        <Body searchParams={searchParams} />
+        <Body />
       </Suspense>
     </PageShell>
-  );
-}
-
-async function Body({ searchParams }: { searchParams: Promise<SearchRecord> }) {
-  const loai = firstParam((await searchParams).loai) ?? "";
-  const ritual = getRitual(loai);
-  return (
-    <div className="space-y-6">
-      {ritual ? <h2 className="ink-heading text-3xl text-ink">{ritual.title}</h2> : null}
-      <RutQueStudio key={loai || "hub"} loai={loai} />
-    </div>
   );
 }

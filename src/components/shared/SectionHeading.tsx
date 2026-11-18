@@ -22,28 +22,22 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "max-w-2xl space-y-3",
+        "max-w-2xl space-y-2.5",
         centered && "mx-auto text-center",
         className,
       )}
     >
       {eyebrow ? (
-        <p className="text-xs font-medium tracking-[0.22em] text-bronze uppercase">
+        <p className={cn("eyebrow flex items-center gap-2", centered && "justify-center")}>
+          <span className="size-1.5 rotate-45 bg-primary" aria-hidden="true" />
           {eyebrow}
         </p>
       ) : null}
-      <h2 id={id} className="ink-heading text-3xl text-ink sm:text-4xl">
+      <h2 id={id} className="ink-heading text-[1.75rem] leading-tight text-ink sm:text-[2.1rem]">
         {title}
       </h2>
-      <div
-        aria-hidden="true"
-        className={cn(
-          "h-px w-16 bg-gradient-to-r from-accent to-transparent",
-          centered && "mx-auto w-24 bg-gradient-to-r from-transparent via-accent to-transparent",
-        )}
-      />
       {description ? (
-        <p className="text-base leading-relaxed text-muted-foreground">{description}</p>
+        <p className="text-[15px] leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
     </div>
   );

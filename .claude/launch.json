@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3100
+    },
+    {
+      "name": "static-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve-static.mjs"],
+      "env": { "NEXT_PUBLIC_BASE_PATH": "/huyentam", "PORT": "4173" },
+      "port": 4173
+    }
+  ]
+}

@@ -83,3 +83,12 @@ export function ageRelationLabel(
       return "Bình hòa";
   }
 }
+
+/** Nhãn hiển thị cho người dùng, giọng nhẹ nhàng hơn nhãn gốc. */
+export const FRIENDLY_FORTUNE: Record<"dai-cat" | "cat" | "binh" | "hung" | "dai-hung", string> = {
+  "dai-cat": "Đại cát",
+  cat: "Cát lành",
+  binh: "Bình an",
+  hung: "Chuyển vận",
+  "dai-hung": "Vận sắp đổi",
+};

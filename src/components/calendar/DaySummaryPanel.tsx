@@ -20,6 +20,9 @@ export type DaySummaryView = {
   isTamNuong: boolean;
   isNguyetKy: boolean;
   isSatChu: boolean;
+  isDuongCong: boolean;
+  dayGod: string;
+  trucSummary: string;
   napAm: string;
   nguHanh: NguHanh;
   festivals: string[];
@@ -59,7 +62,7 @@ export function dayPlainText(summary: DaySummaryView): string {
     `Can chi ngày: ${summary.canChi.dayLabel}`,
     `Can chi tháng: ${summary.canChi.monthLabel}`,
     `Can chi năm: ${summary.canChi.yearLabel}`,
-    `Tiết khí (ước lượng): ${summary.tietKhi}`,
+    `Tiết khí: ${summary.tietKhi}`,
     `Trực: ${summary.truc}`,
     `Nạp âm: ${summary.napAm}`,
     `Ngũ hành: ${NGU_HANH_VI[summary.nguHanh]}`,
@@ -107,13 +110,13 @@ export function DaySummaryPanel({ summary }: DaySummaryPanelProps) {
             <Fact
               label="Tiết khí"
               value={summary.tietKhi}
-              hint="Ước lượng theo khoảng ngày trong năm, chưa phải mốc giao tiết tính từng giờ."
+              hint="Tính theo hoàng kinh Mặt Trời, giờ Việt Nam."
             />
-            <Fact label="Trực" value={summary.truc} hint="Cách gọi trực ngày theo quan niệm dân gian." />
+            <Fact label="Trực" value={summary.truc} hint={summary.trucSummary} />
             <Fact
               label="Hoàng đạo / hắc đạo"
               value={summary.isHoangDao ? "Hoàng đạo" : "Hắc đạo"}
-              hint="Xếp theo chi ngày trong quy ước dân gian đang dùng."
+              hint={`Thần trực nhật: ${summary.dayGod}.`}
             />
           </dl>
         </CardContent>
@@ -173,7 +176,7 @@ export function DaySummaryPanel({ summary }: DaySummaryPanelProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Tam nương, nguyệt kỵ, sát chủ</CardTitle>
+          <CardTitle>Ngày kỵ</CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="flex flex-wrap gap-2">
@@ -188,15 +191,18 @@ export function DaySummaryPanel({ summary }: DaySummaryPanelProps) {
               </Badge>
             </li>
             <li>
+              <Badge variant={summary.isDuongCong ? "gold" : "muted"}>
+                Dương công: {summary.isDuongCong ? "có" : "không"}
+              </Badge>
+            </li>
+            <li>
               <Badge variant={summary.isSatChu ? "gold" : "muted"}>
                 Sát chủ: {summary.isSatChu ? "có" : "không"}
               </Badge>
             </li>
           </ul>
           <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-            Ba mục này là quan niệm dân gian. Trong quy ước đang dùng, sát chủ là các ngày âm 5, 14
-            và 23, trùng đúng nhóm ngày được gắn nguyệt kỵ. Hai tên được ghi song song để đối chiếu
-            cách gọi, không phải hai lớp tính riêng.
+            Tam nương và Nguyệt kỵ theo ngày âm cố định. Sát chủ tính theo tháng âm và chi ngày.
           </p>
         </CardContent>
       </Card>

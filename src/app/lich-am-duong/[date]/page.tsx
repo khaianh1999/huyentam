@@ -15,6 +15,7 @@ import {
   formatSolarSlash,
   parseSolarKey,
   solarKey,
+  todayInVietnam,
   weekdayName,
 } from "@/lib/calendar/dates";
 import { createPageMetadata } from "@/lib/seo/metadata";
@@ -22,6 +23,33 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 type DatePageProps = {
   params: Promise<{ date: string }>;
 };
+
+/**
+ * Static export (GitHub Pages) cannot render dates on demand, so it prerenders
+ * every day from STATIC_CALENDAR_YEARS_BEFORE years ago to
+ * STATIC_CALENDAR_YEARS_AFTER years ahead. A server build prerenders only today.
+ */
+export function generateStaticParams(): { date: string }[] {
+  const today = todayInVietnam();
+  if (process.env.STATIC_EXPORT !== "1") return [{ date: solarKey(today) }];
+
+  const before = Number(process.env.STATIC_CALENDAR_YEARS_BEFORE ?? 2);
+  const after = Number(process.env.STATIC_CALENDAR_YEARS_AFTER ?? 3);
+  const params: { date: string }[] = [];
+  const cursor = new Date(Date.UTC(today.year - before, 0, 1));
+  const end = Date.UTC(today.year + after, 11, 31);
+  while (cursor.getTime() <= end) {
+    params.push({
+      date: solarKey({
+        year: cursor.getUTCFullYear(),
+        month: cursor.getUTCMonth() + 1,
+        day: cursor.getUTCDate(),
+      }),
+    });
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return params;
+}
 
 export async function generateMetadata({ params }: DatePageProps): Promise<Metadata> {
   const { date } = await params;

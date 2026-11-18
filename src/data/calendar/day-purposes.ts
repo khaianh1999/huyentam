@@ -9,20 +9,20 @@ import type { DayPurpose } from "@/types";
 export const DAY_PURPOSES_LABEL = "quan niệm dân gian" as const;
 
 export const DAY_PURPOSES_NOTE =
-  "Các mục đích xem ngày theo quan niệm dân gian: người ta thường đối chiếu hoàng đạo, trực, tam nương, nguyệt kỵ và tuổi xung chiếu. Kết quả chỉ để tham khảo văn hóa, không thay phong tục địa phương, giấy tờ pháp lý hay quyết định của gia đình.";
+  "Các mục đích xem ngày theo quan niệm dân gian: trang đối chiếu 12 thần, 12 trực, nhị thập bát tú, hơn 100 sao tốt xấu, các ngày đại kỵ và tuổi xung khắc. Kết quả chỉ để tham khảo văn hóa, không thay phong tục địa phương, giấy tờ pháp lý hay quyết định của gia đình.";
 
 export const DAY_PURPOSES: DayPurpose[] = [
   {
     id: "cuoi-hoi",
     name: "Cưới hỏi",
     description:
-      "Chọn ngày lễ cưới theo quan niệm dân gian. Lịch vạn niên thường ưu tiên trực Thành, Khai, Định và tránh trực Phá, Nguy, Bế, cùng các ngày tam nương, nguyệt kỵ. Ngày chỉ là một lớp tham khảo bên cạnh thuận tiện của hai họ.",
+      "Chọn ngày lễ cưới theo quan niệm dân gian. Lịch vạn sự ưu tiên trực Thành, Khai, Kiến và tránh trực Phá, Nguy, Bế, cùng các ngày tam nương, nguyệt kỵ. Ngày chỉ là một lớp tham khảo bên cạnh thuận tiện của hai họ.",
   },
   {
     id: "an-hoi",
     name: "Ăn hỏi",
     description:
-      "Xem ngày lễ ăn hỏi, dạm ngõ theo quan niệm dân gian. Trực Thành, Mãn và Định thường được kể là thuận hơn; trực Phá và Bế thường được khuyên tránh. Hai gia đình vẫn nên chốt theo lịch thật của khách và nơi tổ chức.",
+      "Xem ngày lễ ăn hỏi, dạm ngõ theo quan niệm dân gian. Trực Thành, Khai và Kiến được xem là thuận; trực Phá, Nguy và Bế nên tránh. Hai gia đình vẫn nên chốt theo lịch thật của khách và nơi tổ chức.",
   },
   {
     id: "khai-truong",
@@ -34,7 +34,7 @@ export const DAY_PURPOSES: DayPurpose[] = [
     id: "dong-tho",
     name: "Động thổ",
     description:
-      "Xem ngày động thổ, xúc đất lần đầu khi xây sửa. Chuyện dân gian thường nhắc trực Kiến, Định, Thành và khuyên thận trọng với trực Phá, Thu. Việc thi công vẫn phải theo giấy phép, kết cấu và an toàn công trường.",
+      "Xem ngày động thổ, xúc đất lần đầu khi xây sửa. Lịch vạn sự thuận ở trực Chấp, Trừ, Bình và kỵ trực Kiến, Thu, Khai cùng các trực Phá, Nguy, Bế. Việc thi công vẫn phải theo giấy phép, kết cấu và an toàn công trường.",
   },
   {
     id: "nhap-trach",
@@ -58,25 +58,25 @@ export const DAY_PURPOSES: DayPurpose[] = [
     id: "ky-hop-dong",
     name: "Ký hợp đồng",
     description:
-      "Tham khảo ngày ký kết theo quan niệm dân gian. Trực Định, Thành và Mãn thường được xem là hợp việc chốt; trực Phá và Nguy thường bị khuyên tránh. Nội dung hợp đồng và tư vấn pháp lý không thể thay bằng lịch.",
+      "Tham khảo ngày ký kết theo quan niệm dân gian. Trực Định, Thành và Mãn hợp việc chốt; trực Chấp, Phá, Nguy, Bế nên tránh. Nội dung hợp đồng và tư vấn pháp lý không thể thay bằng lịch.",
   },
   {
     id: "xuat-hanh",
     name: "Xuất hành",
     description:
-      "Xem ngày đi xa, xuất hành theo quan niệm dân gian. Trực Khai và Thành thường được kể là thuận; trực Bế và Phá thường được dè. An toàn đường, thời tiết và sức khỏe quyết định chuyến đi hơn chi của ngày.",
+      "Xem ngày đi xa, xuất hành theo quan niệm dân gian. Trực Kiến, Khai và Thành thuận đường đi; trực Chấp, Thu, Phá, Nguy, Bế nên tránh. An toàn đường, thời tiết và sức khỏe quyết định chuyến đi hơn chi của ngày.",
   },
   {
     id: "khoi-cong",
     name: "Khởi công",
     description:
-      "Xem ngày khởi công công trình theo quan niệm dân gian. Trực Kiến, Định và Khai thường được ưu tiên; trực Phá và Thu thường được khuyên thận trọng. Tiến độ thi công phải theo hồ sơ kỹ thuật và điều kiện hiện trường.",
+      "Xem ngày khởi công công trình theo quan niệm dân gian. Lịch vạn sự thuận ở trực Chấp, Trừ, Bình và kỵ trực Kiến, Thu, Khai cùng các trực Phá, Nguy, Bế. Tiến độ thi công phải theo hồ sơ kỹ thuật và điều kiện hiện trường.",
   },
   {
     id: "an-tang",
     name: "An táng",
     description:
-      "Tham khảo ngày an táng theo phong tục và quan niệm dân gian. Lịch thường nhắc trực Bế, Định, Thành và tránh trực Phá. Gia đình nên theo lệ địa phương, quy định nghĩa trang và điều kiện thực tế, không xem điểm số là bắt buộc.",
+      "Tham khảo ngày an táng theo phong tục và quan niệm dân gian. Lịch vạn sự kỵ trực Thu, Khai và các trực Phá, Nguy, Bế. Gia đình nên theo lệ địa phương, quy định nghĩa trang và điều kiện thực tế, không xem điểm số là bắt buộc.",
   },
   {
     id: "khai-truong-cua-hang",

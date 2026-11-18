@@ -1,17 +1,20 @@
 import type { MetadataRoute } from "next";
-
-function origin(): string {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  return raw.replace(/\/$/, "");
-}
+import { absoluteUrl, siteOrigin } from "@/lib/seo/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/api/", "/tai-khoan", "/dang-nhap", "/dang-ky"],
+      disallow: ["/admin", "/api/"],
     },
-    sitemap: `${origin()}/sitemap.xml`,
+    sitemap: absoluteUrl("/sitemap.xml"),
+    host: siteOrigin(),
   };
+}
+
+// Lets `output: "export"` (GitHub Pages) prerender this route under cacheComponents,
+// where `export const dynamic = "force-static"` is not allowed.
+export function generateStaticParams() {
+  return [{}];
 }

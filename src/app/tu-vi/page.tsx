@@ -6,16 +6,16 @@ import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPageMetadata({
-  title: "Xem tử vi",
-  description: "Lập luận trọn đời và theo năm từ họ tên, ngày giờ sinh và giới tính.",
+  title: "Lá số tử vi",
+  description: "Lập lá số Tử Vi Đẩu Số đủ 12 cung, 14 chính tinh, Tứ Hóa, đại hạn và lưu niên, kèm luận giải từng cung.",
   path: "/tu-vi",
 });
 
 export default function TuViPage() {
   return (
     <PageShell
-      title="Xem tử vi"
-      description="Luận tổng quan theo khóa ngày giờ sinh. Phần can chi lấy từ lịch pháp. Phần cung mệnh là khung tham khảo, chưa phải lá số Đẩu Số đủ chính tinh."
+      title="Lá số tử vi"
+      description="Nhập ngày giờ sinh để an đủ 12 cung, 14 chính tinh, Tứ Hóa, đại hạn, lưu niên và đọc luận giải từng cung."
       breadcrumbs={[{ label: "Trang chủ", href: "/" }, { label: "Tử vi" }]}
     >
       <Subnav items={TU_VI_LINKS} />

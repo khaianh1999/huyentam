@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { POPULAR_TOOLS } from "@/data/tools/catalog";
-import { SidebarToday } from "@/components/layout/SidebarToday";
+import { SidebarToday, TodayFallback } from "@/components/layout/SidebarToday";
 import { cn } from "@/lib/utils";
 
 const QUICK_LINKS = [
@@ -27,15 +27,6 @@ type SiteSidebarProps = {
   children?: React.ReactNode;
 };
 
-function TodayFallback() {
-  return (
-    <div
-      className="h-[9.5rem] animate-pulse rounded-2xl bg-secondary/80"
-      aria-hidden="true"
-    />
-  );
-}
-
 /** Cột phải đủ thẻ để không để khoảng trống trắng. */
 export function SiteSidebar({ className, children }: SiteSidebarProps) {
   return (
@@ -46,8 +37,8 @@ export function SiteSidebar({ className, children }: SiteSidebarProps) {
         <SidebarToday />
       </Suspense>
 
-      <div className="rounded-2xl border border-accent/35 bg-[#fffaf2] p-3.5 shadow-[0_8px_24px_rgba(26,18,11,0.05)]">
-        <p className="px-0.5 text-[10px] font-semibold tracking-[0.2em] text-bronze uppercase">
+      <div className="paper-card rounded-2xl p-4">
+        <p className="px-0.5 eyebrow">
           Mục lục
         </p>
         <nav aria-label="Lối tắt" className="mt-2">
@@ -69,8 +60,8 @@ export function SiteSidebar({ className, children }: SiteSidebarProps) {
         </nav>
       </div>
 
-      <div className="rounded-2xl border border-accent/35 bg-gradient-to-b from-[#fffaf2] to-[#f4ead8] p-3.5 shadow-[0_8px_24px_rgba(26,18,11,0.05)]">
-        <p className="text-[10px] font-semibold tracking-[0.2em] text-bronze uppercase">
+      <div className="paper-card rounded-2xl p-4">
+        <p className="eyebrow">
           Xem ngày
         </p>
         <ul className="mt-2 space-y-1">
@@ -87,8 +78,8 @@ export function SiteSidebar({ className, children }: SiteSidebarProps) {
         </ul>
       </div>
 
-      <div className="rounded-2xl border border-accent/35 bg-[#fffaf2] p-3.5 shadow-[0_8px_24px_rgba(26,18,11,0.05)]">
-        <p className="text-[10px] font-semibold tracking-[0.2em] text-bronze uppercase">
+      <div className="paper-card rounded-2xl p-4">
+        <p className="eyebrow">
           Hay dùng
         </p>
         <ul className="mt-2.5 space-y-2">

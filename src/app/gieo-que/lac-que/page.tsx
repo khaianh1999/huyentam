@@ -13,7 +13,7 @@ export default function ShakePage() {
   return (
     <PageShell
       title="Lắc quẻ"
-      description="Ống lắc một lần rồi nhả một quẻ. Không có sáu bước tung, cũng không có hào động."
+      description="Cầm điện thoại lắc như lắc ống xăm, thẻ rơi ra thành một trong 64 quẻ. Trên máy tính thì giữ nút để lắc."
       breadcrumbs={[
         { label: "Trang chủ", href: "/" },
         { label: "Gieo quẻ", href: "/gieo-que" },

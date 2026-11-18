@@ -198,9 +198,6 @@ export const TIET_KHI = [
   "Đông chí",
 ] as const;
 
-/** Hoàng đạo / Hắc đạo by day chi relative to month chi — folk calendar convention */
-export const HOANG_DAO_CHI: Chi[] = ["Ty", "Suu", "Mao", "Ngo", "Dau", "Hoi"];
-
 export const GIO_CHI_LABELS = [
   "Tý (23-1)",
   "Sửu (1-3)",

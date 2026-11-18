@@ -225,6 +225,20 @@ export function lunarToSolar(
   return jdToDate(monthStart + lunarDay - 1);
 }
 
+/**
+ * Khí đang hành vào cuối ngày dân dụng (giờ Việt Nam): 0 = Xuân phân, mỗi bậc 15° hoàng kinh.
+ * Lấy cuối ngày để ngày giao tiết thuộc về tiết mới, đúng cách ghi của lịch vạn niên.
+ */
+export function getSolarTermIndex(
+  day: number,
+  month: number,
+  year: number,
+  timeZone = TZ,
+): number {
+  const dayNumber = jdFromDate(day, month, year);
+  return Math.floor((sunLongitude(dayNumber + 0.5 - timeZone / 24) / PI) * 12);
+}
+
 export function getJulianDay(day: number, month: number, year: number): number {
   return jdFromDate(day, month, year);
 }

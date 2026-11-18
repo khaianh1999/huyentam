@@ -1,12 +1,11 @@
 import { Suspense } from "react";
 import { PageShell } from "@/components/layout/PageShell";
-import { StickDraw } from "@/components/divination/StickDraw";
 import { BOI_TOAN_LINKS, Subnav } from "@/components/divination/Subnav";
 import { Disclaimer } from "@/components/shared/Disclaimer";
 import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
 import { QUAN_THANH_NOTE } from "@/data/fortune-sticks/quan-thanh";
-import { firstParam, type SearchRecord } from "@/lib/divination/params";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { Draw } from "./Draw";
 
 export const metadata = createPageMetadata({
   title: "Xin xăm Quan Thánh",
@@ -14,7 +13,7 @@ export const metadata = createPageMetadata({
   path: "/boi-toan/xin-xam-quan-thanh",
 });
 
-export default function QuanThanhPage({ searchParams }: { searchParams: Promise<SearchRecord> }) {
+export default function QuanThanhPage() {
   return (
     <PageShell
       title="Xin xăm Quan Thánh"
@@ -29,13 +28,8 @@ export default function QuanThanhPage({ searchParams }: { searchParams: Promise<
       <Disclaimer type="quan-niem-dan-gian" />
       <p className="mt-4 mb-8 text-sm leading-relaxed text-muted-foreground">{QUAN_THANH_NOTE}</p>
       <Suspense fallback={<LoadingYinYang label="Đang mở ấn…" />}>
-        <Draw searchParams={searchParams} />
+        <Draw />
       </Suspense>
     </PageShell>
   );
-}
-
-async function Draw({ searchParams }: { searchParams: Promise<SearchRecord> }) {
-  const seed = firstParam((await searchParams).seed);
-  return <StickDraw tone="thanh" initialSeed={seed} />;
 }

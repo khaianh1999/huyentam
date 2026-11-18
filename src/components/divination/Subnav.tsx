@@ -14,7 +14,10 @@ export function Subnav({
   const pathname = usePathname();
 
   return (
-    <nav aria-label={label} className="mb-7 flex flex-wrap gap-1.5">
+    <nav
+      aria-label={label}
+      className="-mx-4 mb-8 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+    >
       {items.map((item) => {
         const base = item.href.split("?")[0] ?? item.href;
         const active =
@@ -29,10 +32,10 @@ export function Subnav({
             key={item.href + item.label}
             href={item.href}
             className={cn(
-              "rounded-full px-3.5 py-1.5 text-sm transition",
+              "shrink-0 rounded-full px-3.5 py-1.5 text-sm whitespace-nowrap transition",
               active
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "border border-accent/30 bg-[#fffaf2]/70 text-wood hover:border-accent hover:text-primary",
+                ? "bg-primary text-primary-foreground shadow-[0_6px_16px_-8px_rgba(142,35,32,0.7)]"
+                : "border border-border bg-card text-wood hover:border-accent hover:text-primary",
             )}
             aria-current={active ? "page" : undefined}
           >
@@ -65,18 +68,11 @@ export const GIEO_QUE_LINKS = [
 export const BOI_TOAN_LINKS = [
   { href: "/boi-toan", label: "Bói toán" },
   { href: "/boi-ten", label: "Bói tên" },
-  { href: "/boi-toan/boi-bai-tay", label: "Bài Tây" },
   { href: "/boi-toan/xin-xam-quan-am", label: "Xăm Quan Âm" },
   { href: "/boi-toan/xin-xam-quan-thanh", label: "Xăm Quan Thánh" },
   { href: "/boi-toan/xin-xam-dau-nam", label: "Xăm đầu năm" },
   { href: "/boi-toan/tuoi-hop", label: "Tuổi hợp" },
   { href: "/boi-toan/tuoi-vo-chong", label: "Tuổi vợ chồng" },
-  { href: "/boi-toan/boi-tinh-yeu", label: "Tình yêu" },
-  { href: "/boi-toan/boi-cong-danh", label: "Công danh" },
-  { href: "/boi-toan/boi-tai-loc", label: "Tài lộc" },
-  { href: "/boi-toan/boi-van-may", label: "Vận may" },
-  { href: "/boi-toan/boi-so-dien-thoai", label: "Số điện thoại" },
-  { href: "/boi-toan/boi-bien-so-xe", label: "Biển số xe" },
 ];
 
 export const PHONG_THUY_LINKS = [

@@ -13,7 +13,7 @@ export default function ElementPage() {
   return (
     <PageShell
       title="Ngũ hành bản mệnh"
-      description="Bản mệnh lấy từ can năm. Bấm một hành trong vòng năm để xem nó sinh, khắc hay cùng hành với mệnh của bạn."
+      description="Bản mệnh lấy theo nạp âm năm sinh (ví dụ 1990 là Lộ Bàng Thổ). Bấm một hành trong vòng năm để xem nó sinh, khắc hay cùng hành với mệnh của bạn."
       breadcrumbs={[
         { label: "Trang chủ", href: "/" },
         { label: "Phong thủy", href: "/phong-thuy" },

@@ -17,7 +17,7 @@ export default function AdminSeoPage() {
         description="Mỗi trang công khai gọi createPageMetadata: tiêu đề tuyệt đối, mô tả, canonical và Open Graph tiếng Việt."
       />
       <SchemaNote>
-        SiteSetting.key / value dành cho ghi đè sau này (seo.title, seo.description). Sitemap ở src/app/sitemap.ts gồm route chính, slug bài viết và mã con giáp, cung hoàng đạo. robots.ts chặn /admin, /api, /tai-khoan và các trang đăng nhập. Đặt NEXT_PUBLIC_SITE_URL để canonical ra đúng miền.
+        SiteSetting.key / value dành cho ghi đè sau này (seo.title, seo.description). Sitemap ở src/app/sitemap.ts gồm route chính, slug bài viết và mã con giáp, cung hoàng đạo. robots.ts chặn /admin và /api. Đặt NEXT_PUBLIC_SITE_URL để canonical ra đúng miền.
       </SchemaNote>
       <SeoDraftForm />
     </>

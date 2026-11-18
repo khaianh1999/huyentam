@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { PageShell } from "@/components/layout/PageShell";
 import { BOI_TOAN_LINKS, Subnav } from "@/components/divination/Subnav";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 const GROUPS = [
   {
-    title: "Xăm & bài",
+    title: "Xin xăm",
     items: [
       {
         href: "/boi-toan/xin-xam-quan-am",
@@ -21,11 +22,6 @@ const GROUPS = [
         href: "/boi-toan/xin-xam-dau-nam",
         title: "Xin xăm đầu năm",
         body: "Nghi thức đầu năm với lời nguyện ngắn và thẻ xăm mang tính dân gian.",
-      },
-      {
-        href: "/boi-toan/boi-bai-tay",
-        title: "Bói bài Tây",
-        body: "Ba lá Major Arcana trên bàn gỗ tối — giải trí văn hóa, có seed.",
       },
     ],
   },
@@ -45,47 +41,12 @@ const GROUPS = [
     ],
   },
   {
-    title: "Việc",
+    title: "Tên",
     items: [
-      {
-        href: "/boi-toan/boi-tinh-yeu",
-        title: "Bói tình yêu",
-        body: "Hai tên, một sợi chỉ số. Không hỏi năm sinh.",
-      },
-      {
-        href: "/boi-toan/boi-cong-danh",
-        title: "Bói công danh",
-        body: "Một chiếc thang năm bậc. Bậc được đánh dấu tùy tên, năm và ngả đang đứng.",
-      },
-      {
-        href: "/boi-toan/boi-tai-loc",
-        title: "Bói tài lộc",
-        body: "Ba cửa giữ, làm và chờ. Bạn chọn ý trước, quẻ quyết cửa nào hé.",
-      },
-      {
-        href: "/boi-toan/boi-van-may",
-        title: "Bói vận may",
-        body: "Bàn tám ô xoay theo tên và mối bận tâm trong ngày.",
-      },
-    ],
-  },
-  {
-    title: "Số",
-    items: [
-      {
-        href: "/boi-toan/boi-so-dien-thoai",
-        title: "Số điện thoại",
-        body: "Luận trên dãy số, tổng và số rút gọn. Không cần tên.",
-      },
-      {
-        href: "/boi-toan/boi-bien-so-xe",
-        title: "Biển số xe",
-        body: "Gõ thẳng lên mặt biển. Chữ và số được tách riêng.",
-      },
       {
         href: "/boi-ten",
         title: "Bói tên",
-        body: "Bốn thẻ thần số và ngũ hành của tên.",
+        body: "Thần số và ngũ hành của họ tên, đối chiếu với năm sinh.",
       },
     ],
   },
@@ -93,7 +54,7 @@ const GROUPS = [
 
 export const metadata = createPageMetadata({
   title: "Bói toán dân gian",
-  description: "Xăm, tuổi, tình duyên, công danh, tài lộc, vận may, số điện thoại và biển số.",
+  description: "Xin xăm Quan Âm, Quan Thánh, xăm đầu năm, xem tuổi hợp, tuổi vợ chồng và bói tên.",
   path: "/boi-toan",
 });
 
@@ -101,18 +62,24 @@ export default function BoiToanPage() {
   return (
     <PageShell
       title="Bói toán dân gian"
-      description="Mỗi việc một cách hỏi. Kết quả ghi rõ là quan niệm dân gian và khóa bằng seed để lần sau còn đối chiếu."
+      description="Những phép xem có gốc trong văn hóa Việt: xin xăm, hợp tuổi, xem tên. Kết quả ghi rõ là quan niệm dân gian."
       breadcrumbs={[{ label: "Trang chủ", href: "/" }, { label: "Bói toán" }]}
     >
       <Subnav items={BOI_TOAN_LINKS} />
       <div className="space-y-10">
         {GROUPS.map((group) => (
           <section key={group.title}>
-            <h2 className="ink-heading text-2xl text-ink">{group.title}</h2>
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="flex items-center gap-3">
+              <h2 className="ink-heading text-2xl text-ink">{group.title}</h2>
+              <span className="h-px flex-1 bg-gradient-to-r from-accent/40 to-transparent" aria-hidden="true" />
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {group.items.map((item) => (
-                <Link key={item.href} href={item.href} className="paper-card rounded-xl p-5 transition hover:-translate-y-0.5">
-                  <span className="ink-heading block text-xl text-ink">{item.title}</span>
+                <Link key={item.href} href={item.href} className="paper-card group flex flex-col rounded-2xl p-5 hover:-translate-y-0.5">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="ink-heading text-xl text-ink transition-colors group-hover:text-primary">{item.title}</span>
+                    <ArrowRight className="size-4 shrink-0 text-bronze transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
                   <span className="mt-2 block text-sm leading-relaxed text-muted-foreground">{item.body}</span>
                 </Link>
               ))}

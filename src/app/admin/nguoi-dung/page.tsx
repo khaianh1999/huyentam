@@ -86,7 +86,7 @@ async function UserTable() {
     return (
       <EmptyState
         title="Chưa có tài khoản"
-        description="Đăng ký tại /dang-ky sẽ tạo hàng User khi cơ sở dữ liệu đang mở."
+        description="Trang chưa có đăng nhập, bảng User hiện để trống."
       />
     );
   }

@@ -3,11 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
-import {
-  buildTuViNam,
-  buildTuViNgay,
-  buildTuViTronDoi,
-} from "@/lib/algorithms/astrology/tu-vi";
+import { buildLaSo } from "@/lib/algorithms/astrology/la-so";
 import {
   BIRTH_HOURS,
   isRealDate,
@@ -21,9 +17,8 @@ import { LoadingYinYang } from "@/components/shared/LoadingYinYang";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Field } from "@/components/divination/Field";
-import { TuViDayView, TuViLifeView, TuViYearView } from "@/components/divination/TuViPanels";
+import { LaSoView, LuuNhatPanel, LuuNienPanel } from "@/components/divination/LaSoView";
 import { cn } from "@/lib/utils";
 
 type Mode = "studio" | "ngay" | "nam" | "thang";
@@ -39,7 +34,6 @@ export function TuViStudio({ mode, today }: { mode: Mode; today: VnDate }) {
   const [viewYear, setViewYear] = useState(String(today.year));
   const [viewMonth, setViewMonth] = useState(String(today.month));
   const [viewDay, setViewDay] = useState(String(today.day));
-  const [tab, setTab] = useState("tron-doi");
   const [pickedMonth, setPickedMonth] = useState<number | null>(mode === "thang" ? today.month : null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -52,25 +46,16 @@ export function TuViStudio({ mode, today }: { mode: Mode; today: VnDate }) {
     };
   }, []);
 
-  const cheDo: CheDoTuVi =
-    mode === "ngay" ? "ngay" : mode === "nam" ? "nam" : mode === "thang" ? "thang" : tab === "nam" ? "nam" : "tron-doi";
+  const cheDo: CheDoTuVi = mode === "ngay" ? "ngay" : mode === "nam" ? "nam" : mode === "thang" ? "thang" : "tron-doi";
 
-  const life = useMemo(() => (profile ? buildTuViTronDoi(profile) : null), [profile]);
+  const chart = useMemo(() => (profile ? buildLaSo(profile) : null), [profile]);
   const yearNumber = parseBoundedInt(viewYear, 1900, 2200);
   const monthNumber = parseBoundedInt(viewMonth, 1, 12);
   const dayNumber = parseBoundedInt(viewDay, 1, 31);
-  const yearView = useMemo(() => {
-    if (!profile || yearNumber === null) return null;
-    if (cheDo === "ngay") return null;
-    return buildTuViNam(profile, yearNumber);
-  }, [profile, yearNumber, cheDo]);
-  const dayView = useMemo(() => {
-    if (!profile || cheDo !== "ngay" || yearNumber === null || monthNumber === null || dayNumber === null) {
-      return null;
-    }
-    if (!isRealDate(yearNumber, monthNumber, dayNumber)) return null;
-    return buildTuViNgay(profile, { year: yearNumber, month: monthNumber, day: dayNumber });
-  }, [profile, cheDo, yearNumber, monthNumber, dayNumber]);
+  const viewDate =
+    yearNumber !== null && monthNumber !== null && dayNumber !== null && isRealDate(yearNumber, monthNumber, dayNumber)
+      ? { year: yearNumber, month: monthNumber, day: dayNumber }
+      : null;
 
   function readProfile(): TuViProfile | null {
     const fullName = name.trim();
@@ -135,10 +120,6 @@ export function TuViStudio({ mode, today }: { mode: Mode; today: VnDate }) {
         ngayXem: cheDo === "ngay" ? (dayNumber ?? undefined) : undefined,
       })
     : null;
-
-  const shareText = life
-    ? `${life.profile.fullName}\n${life.overview}\n${life.career}\n${life.disclaimer}`
-    : "";
 
   return (
     <div className="space-y-8">
@@ -233,7 +214,7 @@ export function TuViStudio({ mode, today }: { mode: Mode; today: VnDate }) {
               {error}
             </p>
           ) : null}
-          <Button type="submit">Lập luận giải</Button>
+          <Button type="submit">Lập lá số</Button>
         </div>
 
         <aside className="rounded-xl border border-accent/25 bg-gradient-to-b from-[#f8efd4]/80 to-[#fffaf2] p-4 lg:mt-1">
@@ -241,69 +222,46 @@ export function TuViStudio({ mode, today }: { mode: Mode; today: VnDate }) {
             Cách đọc
           </p>
           <ul className="mt-3 space-y-2.5 text-sm leading-relaxed text-wood">
-            <li>Can chi lấy từ ngày giờ sinh theo lịch pháp.</li>
-            <li>Phần cung mệnh là khung tham khảo, chưa phải lá số Đẩu Số đủ chính tinh.</li>
-            <li>Phân biệt rõ tử vi phương Đông với cung hoàng đạo phương Tây.</li>
+            <li>Nhập ngày dương lịch, trang tự đổi sang âm lịch để an sao.</li>
+            <li>Lá số có đủ 12 cung, 14 chính tinh, hơn 90 phụ tinh và Tứ Hóa.</li>
+            <li>Giờ sinh càng đúng thì lá số càng chuẩn. Sinh sau 23 giờ được tính sang ngày hôm sau.</li>
           </ul>
           <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-            Kết quả mang tính tham khảo văn hóa, không thay quyết định thực tế.
+            Lời luận mang tính giải trí và tham khảo văn hóa.
           </p>
         </aside>
       </form>
 
-      {pending ? <LoadingYinYang label="Đang đối chiếu ngày giờ sinh…" /> : null}
+      {pending ? <LoadingYinYang label="Đang an sao…" /> : null}
 
-      {profile && life && !pending ? (
-        <div className="space-y-6">
+      {profile && chart && !pending ? (
+        <div className="space-y-4">
           {href ? (
-            <Button asChild variant="outline">
-              <Link href={href}>Mở trang kết quả</Link>
-            </Button>
+            <div className="text-center">
+              <Button asChild variant="outline" size="sm">
+                <Link href={href}>Mở trang kết quả để lưu hoặc chia sẻ</Link>
+              </Button>
+            </div>
           ) : null}
-          {mode === "studio" ? (
-            <Tabs value={tab} onValueChange={setTab}>
-              <TabsList>
-                <TabsTrigger value="tron-doi">Trọn đời</TabsTrigger>
-                <TabsTrigger value="nam">Theo năm</TabsTrigger>
-              </TabsList>
-              <TabsContent value="tron-doi">
-                <TuViLifeView data={life} shareText={shareText} />
-              </TabsContent>
-              <TabsContent value="nam">
-                <div className="mb-4 max-w-xs">
-                  <Field label="Đổi năm xem" htmlFor="doi-nam">
-                    <Input
-                      id="doi-nam"
-                      inputMode="numeric"
-                      value={viewYear}
-                      onChange={(event) => setViewYear(event.target.value)}
-                    />
-                  </Field>
-                </div>
-                {yearView ? (
-                  <TuViYearView data={yearView} selectedMonth={pickedMonth} onSelectMonth={setPickedMonth} />
-                ) : (
-                  <p className="text-sm text-primary">Năm xem cần từ 1900 đến 2200.</p>
-                )}
-              </TabsContent>
-            </Tabs>
+          {mode === "studio" ? <LaSoView chart={chart} /> : null}
+          {(mode === "nam" || mode === "thang") && yearNumber !== null ? (
+            <div className="mx-auto max-w-4xl">
+              <LuuNienPanel
+                chart={chart}
+                year={yearNumber}
+                selectedMonth={mode === "thang" ? (pickedMonth ?? monthNumber) : null}
+              />
+            </div>
           ) : null}
-          {mode === "nam" && yearView ? (
-            <TuViYearView data={yearView} selectedMonth={pickedMonth} onSelectMonth={setPickedMonth} />
+          {(mode === "nam" || mode === "thang") && yearNumber === null ? (
+            <p className="text-sm text-primary">Năm xem cần từ 1900 đến 2200.</p>
           ) : null}
-          {mode === "nam" && !yearView ? <p className="text-sm text-primary">Năm xem cần từ 1900 đến 2200.</p> : null}
-          {mode === "thang" && yearView ? (
-            <TuViYearView
-              data={yearView}
-              selectedMonth={pickedMonth ?? monthNumber}
-              onSelectMonth={setPickedMonth}
-            />
+          {mode === "ngay" && viewDate ? (
+            <div className="mx-auto max-w-4xl">
+              <LuuNhatPanel chart={chart} date={viewDate} />
+            </div>
           ) : null}
-          {mode === "thang" && !yearView ? <p className="text-sm text-primary">Năm xem cần từ 1900 đến 2200.</p> : null}
-          {mode === "ngay" && dayView ? <TuViDayView data={dayView} /> : null}
-          {mode === "ngay" && !dayView ? (
-            <p className="text-sm text-primary">Ngày muốn xem không có thật.</p>
-          ) : null}
+          {mode === "ngay" && !viewDate ? <p className="text-sm text-primary">Ngày muốn xem không có thật.</p> : null}
         </div>
       ) : null}
     </div>

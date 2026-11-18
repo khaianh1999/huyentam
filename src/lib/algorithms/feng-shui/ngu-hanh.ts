@@ -1,6 +1,6 @@
 import type { NguHanh } from "@/types";
 import { NGU_HANH_VI } from "@/lib/algorithms/calendar/constants";
-import { getYearCanChi, getNguHanhFromCan } from "@/lib/algorithms/calendar/can-chi";
+import { getNapAm, getYearCanChi } from "@/lib/algorithms/calendar/can-chi";
 
 export const NGU_HANH_ORDER: NguHanh[] = ["Kim", "Thuy", "Moc", "Hoa", "Tho"];
 
@@ -36,18 +36,26 @@ export function relation(a: NguHanh, b: NguHanh): "sinh" | "duoc-sinh" | "khac" 
   return "bi-khac";
 }
 
-/** Cung mệnh / nạp âm năm sinh — deterministic from year can */
+const NAP_AM_ELEMENT: Record<string, NguHanh> = { Kim: "Kim", Mộc: "Moc", Thủy: "Thuy", Hỏa: "Hoa", Thổ: "Tho" };
+
+/**
+ * Bản mệnh theo nạp âm của năm sinh (1990 Canh Ngọ là Lộ Bàng Thổ, hành Thổ),
+ * đúng như cách người Việt vẫn gọi "mệnh Thổ, mệnh Kim". Không lấy theo hành của thiên can.
+ */
 export function getBanMenhByYear(year: number): {
   canChi: string;
   element: NguHanh;
   label: string;
+  napAm: string;
 } {
   const { can, chi } = getYearCanChi(year);
-  const element = getNguHanhFromCan(can);
+  const napAm = getNapAm(can, chi);
+  const element = NAP_AM_ELEMENT[napAm.split(" ").at(-1) ?? ""] ?? "Tho";
   return {
     canChi: `${can}-${chi}`,
     element,
     label: NGU_HANH_VI[element],
+    napAm,
   };
 }
 
@@ -85,6 +93,6 @@ export function getFengShuiProfile(year: number) {
     sinh: NGU_HANH_VI[tuongSinh(menh.element)],
     khac: NGU_HANH_VI[tuongKhac(menh.element)],
     disclaimer:
-      "Ngũ hành bản mệnh theo can năm là quy ước phổ biến trong phong thủy dân gian Việt Nam, mang tính tham khảo văn hóa.",
+      "Bản mệnh theo nạp âm năm sinh là cách gọi phổ biến trong phong thủy dân gian Việt Nam, mang tính tham khảo văn hóa.",
   };
 }
